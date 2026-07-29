@@ -1,4 +1,4 @@
-import { clear } from './renderer';
+import { clear, drawLine } from './renderer.js';
 
 const canvas = document.getElementById('canvas');
 
@@ -22,8 +22,19 @@ function update(): void {}
 
 function loop(): void {
   update();
-  clear(safeCtx);
+  render();
   requestAnimationFrame(loop);
 }
 
 requestAnimationFrame(loop);
+const a = { x: 100, y: 100 };
+const b = { x: 200, y: 100 };
+const c = { x: 150, y: 200 };
+
+function render(): void {
+  clear(safeCtx);
+
+  drawLine(safeCtx, a, b);
+  drawLine(safeCtx, b, c);
+  drawLine(safeCtx, c, a);
+}
