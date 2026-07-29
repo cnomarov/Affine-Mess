@@ -1,0 +1,37 @@
+{
+  "name": "affine-mess",
+  "version": "1.0.0",
+  "description": "> A tiny 2D engine where transformations work perfectly—until they don't.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "serve": "live-server",
+    "dev": "concurrently \"npm:watch\" \"npm:serve\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cnomarov/Affine-Mess.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cnomarov/Affine-Mess/issues"
+  },
+  "homepage": "https://github.com/cnomarov/Affine-Mess#readme",
+  "devDependencies": {
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
+    "@babel/preset-typescript": "^8.0.1",
+    "@types/jest": "^30.0.0",
+    "babel-jest": "^30.4.1",
+    "concurrently": "^10.0.4",
+    "jest": "^30.4.2",
+    "live-server": "^1.2.2",
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.2"
+  }
+}
