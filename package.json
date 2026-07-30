@@ -4,12 +4,11 @@
   "description": "> A tiny 2D engine where transformations work perfectly—until they don't.",
   "main": "index.js",
   "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "serve": "live-server",
-    "dev": "concurrently \"npm:watch\" \"npm:serve\""
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -32,6 +31,7 @@
     "jest": "^30.4.2",
     "live-server": "^1.2.2",
     "prettier": "^3.9.6",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vite": "^8.2.0"
   }
 }
