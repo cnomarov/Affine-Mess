@@ -13,10 +13,6 @@ export class Mat2 {
     this.m11 = m11;
   }
 
-  static identity() {
-    return new Mat2(1, 0, 0, 1);
-  }
-
   transformVector(vector: Vec2) {
     const x = vector.x * this.m00 + vector.y * this.m10;
     const y = vector.x * this.m01 + vector.y * this.m11;
@@ -31,6 +27,74 @@ export class Mat2 {
     const c01 = this.m00 * mat.m01 + this.m01 * mat.m11;
     const c10 = this.m10 * mat.m00 + this.m11 * mat.m10;
     const c11 = this.m10 * mat.m01 + this.m11 * mat.m11;
+
+    const result = new Mat2(c00, c01, c10, c11);
+
+    return result;
+  }
+
+  static identity() {
+    return new Mat2(1, 0, 0, 1);
+  }
+
+  static rotate(angle: number) {
+    const c00 = Math.cos(angle);
+    const c01 = Math.sin(angle);
+    const c10 = -Math.sin(angle);
+    const c11 = Math.cos(angle);
+
+    const result = new Mat2(c00, c01, c10, c11);
+
+    return result;
+  }
+
+  static scale(scaleX: number, scaleY: number) {
+    const c00 = scaleX;
+    const c01 = 0;
+    const c10 = 0;
+    const c11 = scaleY;
+
+    const result = new Mat2(c00, c01, c10, c11);
+
+    return result;
+  }
+
+  static uniformScale(scale: number) {
+    const result = this.scale(scale, scale);
+
+    return result;
+  }
+
+  static shear(shearX: number, shearY: number) {
+    const c00 = 1;
+    const c01 = shearY;
+    const c10 = shearX;
+    const c11 = 1;
+
+    const result = new Mat2(c00, c01, c10, c11);
+
+    return result;
+  }
+
+  static reflect(vec: Vec2) {
+    const normalizedVec = vec.normalize();
+
+    const c00 = 2 * Math.pow(normalizedVec.x, 2) - 1;
+    const c01 = 2 * normalizedVec.x * normalizedVec.y;
+    const c10 = 2 * normalizedVec.x * normalizedVec.y;
+    const c11 = 2 * Math.pow(normalizedVec.y, 2) - 1;
+
+    const result = new Mat2(c00, c01, c10, c11);
+
+    return result;
+  }
+
+  static project(vec: Vec2) {
+    const normalizedVec = vec.normalize();
+    const c00 = Math.pow(normalizedVec.x, 2);
+    const c01 = normalizedVec.x * normalizedVec.y;
+    const c10 = normalizedVec.x * normalizedVec.y;
+    const c11 = Math.pow(normalizedVec.y, 2);
 
     const result = new Mat2(c00, c01, c10, c11);
 

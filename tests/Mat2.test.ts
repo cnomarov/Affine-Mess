@@ -68,3 +68,91 @@ test('Mat2 combined methods transformVector and multiply', () => {
   expect(matB).toEqual(new Mat2(5, 6, 7, 8));
   expect(a).toEqual(new Vec2(1, 2));
 });
+
+test('Mat2 method rotate', () => {
+  const a = new Vec2(1, 0);
+  const mat = Mat2.rotate(Math.PI / 2);
+  const b = new Vec2(0, 1);
+  const c = new Vec2(-1, 0);
+
+  const result = mat.transformVector(a);
+  const result2 = mat.transformVector(b);
+
+  expect(result.equalsApprox(b)).toBe(true);
+  expect(result2.equalsApprox(c)).toBe(true);
+  expect(a).toEqual(new Vec2(1, 0));
+  expect(b).toEqual(new Vec2(0, 1));
+  expect(result).not.toBe(a);
+  expect(result2).not.toBe(b);
+});
+
+test('Mat2 method scale', () => {
+  const a = new Vec2(4, 5);
+  const scaleX = 2;
+  const scaleY = 3;
+
+  const mat = Mat2.scale(scaleX, scaleY);
+
+  const result = mat.transformVector(a);
+
+  expect(result).toEqual(new Vec2(8, 15));
+  expect(result).not.toBe(a);
+  expect(a).toEqual(new Vec2(4, 5));
+});
+
+test('Mat2 method uniformScale', () => {
+  const a = new Vec2(4, 5);
+  const scale = 2;
+
+  const mat = Mat2.uniformScale(scale);
+
+  const result = mat.transformVector(a);
+
+  expect(result).toEqual(new Vec2(8, 10));
+  expect(result).not.toBe(a);
+  expect(a).toEqual(new Vec2(4, 5));
+});
+
+test('Mat2 method shear', () => {
+  const a = new Vec2(3, 4);
+  const shearX = 2;
+  const shearY = 0;
+
+  const mat = Mat2.shear(shearX, shearY);
+
+  const result = mat.transformVector(a);
+
+  expect(result).toEqual(new Vec2(11, 4));
+  expect(result).not.toBe(a);
+  expect(a).toEqual(new Vec2(3, 4));
+});
+
+test('Mat2 method reflect', () => {
+  const a = new Vec2(3, 4);
+  const u = new Vec2(5, 0);
+
+  const mat = Mat2.reflect(u);
+
+  const result = mat.transformVector(a);
+
+  expect(result).toEqual(new Vec2(3, -4));
+  expect(mat).toEqual(new Mat2(1, 0, 0, -1));
+  expect(result).not.toBe(a);
+  expect(u).toEqual(new Vec2(5, 0));
+  expect(a).toEqual(new Vec2(3, 4));
+});
+
+test('Mat2 method project', () => {
+  const a = new Vec2(3, 4);
+  const u = new Vec2(5, 0);
+
+  const mat = Mat2.project(u);
+
+  const result = mat.transformVector(a);
+
+  expect(result).toEqual(new Vec2(3, 0));
+  expect(mat).toEqual(new Mat2(1, 0, 0, 0));
+  expect(result).not.toBe(a);
+  expect(u).toEqual(new Vec2(5, 0));
+  expect(a).toEqual(new Vec2(3, 4));
+});
