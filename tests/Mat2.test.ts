@@ -156,3 +156,112 @@ test('Mat2 method project', () => {
   expect(u).toEqual(new Vec2(5, 0));
   expect(a).toEqual(new Vec2(3, 4));
 });
+
+test('Mat2 method scaleAlongAxis', () => {
+  const a = new Vec2(1, 1);
+  const b = new Vec2(-1, 1);
+  const u = new Vec2(1, 1);
+  const k = 2;
+
+  const mat = Mat2.scaleAlongAxis(u, k);
+
+  const result = mat.transformVector(a);
+  const result2 = mat.transformVector(b);
+
+  expect(result.equalsApprox(new Vec2(2, 2))).toBe(true);
+  expect(result2.equalsApprox(new Vec2(-1, 1))).toBe(true);
+
+  expect(result).not.toBe(a);
+  expect(result2).not.toBe(b);
+
+  expect(u).toEqual(new Vec2(1, 1));
+  expect(a).toEqual(new Vec2(1, 1));
+  expect(b).toEqual(new Vec2(-1, 1));
+});
+
+test('Mat2 method transpose', () => {
+  const mat = new Mat2(1, 2, 3, 4);
+  const result = mat.transpose();
+
+  expect(result).toEqual(new Mat2(1, 3, 2, 4));
+  expect(result).not.toBe(mat);
+  expect(mat).toEqual(new Mat2(1, 2, 3, 4));
+});
+
+test('Mat2 method determinant ', () => {
+  const mat = new Mat2(2, 3, 1, 4);
+  const result = mat.determinant();
+
+  expect(result).toBe(5);
+  expect(mat).toEqual(new Mat2(2, 3, 1, 4));
+});
+
+test('Mat2 method determinant through rotation', () => {
+  const mat = Mat2.rotate(Math.PI / 3);
+  const result = mat.determinant();
+
+  expect(result).toBeCloseTo(1);
+  expect(mat).toEqual(Mat2.rotate(Math.PI / 3));
+});
+
+test('Mat2 method determinant through scale', () => {
+  const scaleX = 2;
+  const scaleY = 3;
+
+  const mat = Mat2.scale(scaleX, scaleY);
+
+  const result = mat.determinant();
+
+  expect(result).toBeCloseTo(6);
+  expect(mat).toEqual(new Mat2(2, 0, 0, 3));
+});
+
+test('Mat2 method determinant through reflect', () => {
+  const u = new Vec2(1, 2);
+
+  const mat = Mat2.reflect(u);
+  const result = mat.determinant();
+
+  expect(result).toBeCloseTo(-1);
+});
+
+test('Mat2 method determinant through project', () => {
+  const u = new Vec2(1, 2);
+
+  const mat = Mat2.project(u);
+  const result = mat.determinant();
+
+  expect(result).toBeCloseTo(0);
+});
+
+test('Mat2 method inverse', () => {
+  const mat = new Mat2(2, 0, 0, 3);
+
+  const inverse = mat.inverse();
+  const product1 = mat.multiply(inverse);
+  const product2 = inverse.multiply(mat);
+
+  expect(inverse.m00).toBeCloseTo(1 / 2);
+  expect(inverse.m01).toBeCloseTo(0);
+  expect(inverse.m10).toBeCloseTo(0);
+  expect(inverse.m11).toBeCloseTo(1 / 3);
+
+  expect(product1.m00).toBeCloseTo(1);
+  expect(product1.m01).toBeCloseTo(0);
+  expect(product1.m10).toBeCloseTo(0);
+  expect(product1.m11).toBeCloseTo(1);
+
+  expect(product2.m00).toBeCloseTo(1);
+  expect(product2.m01).toBeCloseTo(0);
+  expect(product2.m10).toBeCloseTo(0);
+  expect(product2.m11).toBeCloseTo(1);
+
+  expect(inverse).not.toBe(mat);
+  expect(mat).toEqual(new Mat2(2, 0, 0, 3));
+});
+
+test('Mat2 method inverse rejects a singular matrix', () => {
+  const singular = Mat2.project(new Vec2(1, 2));
+
+  expect(() => singular.inverse()).toThrow('Matrix is not invertible');
+});

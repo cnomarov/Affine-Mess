@@ -1,3 +1,4 @@
+import { EPSILON } from '../constants';
 import { Vec2 } from './Vec2';
 
 export class Mat2 {
@@ -27,6 +28,39 @@ export class Mat2 {
     const c01 = this.m00 * mat.m01 + this.m01 * mat.m11;
     const c10 = this.m10 * mat.m00 + this.m11 * mat.m10;
     const c11 = this.m10 * mat.m01 + this.m11 * mat.m11;
+
+    const result = new Mat2(c00, c01, c10, c11);
+
+    return result;
+  }
+
+  transpose() {
+    const c00 = this.m00;
+    const c01 = this.m10;
+    const c10 = this.m01;
+    const c11 = this.m11;
+
+    const result = new Mat2(c00, c01, c10, c11);
+
+    return result;
+  }
+
+  determinant() {
+    const result = this.m00 * this.m11 - this.m01 * this.m10;
+
+    return result;
+  }
+
+  inverse() {
+    const determinant = this.determinant();
+    if (Math.abs(determinant) <= EPSILON) {
+      throw new Error('Matrix is not invertible');
+    }
+
+    const c00 = this.m11 * (1 / determinant);
+    const c01 = -this.m01 * (1 / determinant);
+    const c10 = -this.m10 * (1 / determinant);
+    const c11 = this.m00 * (1 / determinant);
 
     const result = new Mat2(c00, c01, c10, c11);
 
@@ -95,6 +129,19 @@ export class Mat2 {
     const c01 = normalizedVec.x * normalizedVec.y;
     const c10 = normalizedVec.x * normalizedVec.y;
     const c11 = Math.pow(normalizedVec.y, 2);
+
+    const result = new Mat2(c00, c01, c10, c11);
+
+    return result;
+  }
+
+  static scaleAlongAxis(vec: Vec2, k: number) {
+    const normalizedVec = vec.normalize();
+    const s = k - 1;
+    const c00 = 1 + s * Math.pow(normalizedVec.x, 2);
+    const c01 = s * normalizedVec.x * normalizedVec.y;
+    const c10 = s * normalizedVec.x * normalizedVec.y;
+    const c11 = 1 + s * Math.pow(normalizedVec.y, 2);
 
     const result = new Mat2(c00, c01, c10, c11);
 
