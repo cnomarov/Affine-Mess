@@ -16,3 +16,14 @@ export function drawLine(
   ctx.strokeStyle = color;
   ctx.stroke();
 }
+
+export function drawText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  point: ScreenPoint,
+  color: string = 'black'
+) {
+  ctx.fillStyle = color;
+  ctx.font = '18px sans-serif';
+  ctx.fillText(text, point.x, point.y);
+}
