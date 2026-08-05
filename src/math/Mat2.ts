@@ -29,7 +29,11 @@ export class Mat2 {
     const c10 = this.m10 * mat.m00 + this.m11 * mat.m10;
     const c11 = this.m10 * mat.m01 + this.m11 * mat.m11;
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
@@ -40,7 +44,11 @@ export class Mat2 {
     const c10 = this.m01;
     const c11 = this.m11;
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
@@ -62,13 +70,21 @@ export class Mat2 {
     const c10 = -this.m10 * (1 / determinant);
     const c11 = this.m00 * (1 / determinant);
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
 
   static identity() {
-    return new Mat2(1, 0, 0, 1);
+    // prettier-ignore
+    return new Mat2(
+      1, 0,
+      0, 1
+    );
   }
 
   static rotate(angle: number) {
@@ -77,7 +93,11 @@ export class Mat2 {
     const c10 = -Math.sin(angle);
     const c11 = Math.cos(angle);
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
@@ -88,7 +108,11 @@ export class Mat2 {
     const c10 = 0;
     const c11 = scaleY;
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
@@ -105,7 +129,11 @@ export class Mat2 {
     const c10 = shearX;
     const c11 = 1;
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
@@ -118,7 +146,11 @@ export class Mat2 {
     const c10 = 2 * normalizedVec.x * normalizedVec.y;
     const c11 = 2 * Math.pow(normalizedVec.y, 2) - 1;
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
@@ -130,7 +162,11 @@ export class Mat2 {
     const c10 = normalizedVec.x * normalizedVec.y;
     const c11 = Math.pow(normalizedVec.y, 2);
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
@@ -143,7 +179,11 @@ export class Mat2 {
     const c10 = s * normalizedVec.x * normalizedVec.y;
     const c11 = 1 + s * Math.pow(normalizedVec.y, 2);
 
-    const result = new Mat2(c00, c01, c10, c11);
+    // prettier-ignore
+    const result = new Mat2(
+      c00, c01,
+      c10, c11
+    );
 
     return result;
   }
