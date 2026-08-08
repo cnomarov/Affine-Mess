@@ -1,4 +1,4 @@
-import { renderMat2Demo } from './demos/mat2Demo';
+import { renderMat3Demo } from './demos/mat3Demo';
 import { clear } from './renderer';
 
 const canvas = document.getElementById('canvas');
@@ -30,6 +30,5 @@ requestAnimationFrame(loop);
 
 function render(): void {
   clear(safeCtx);
-  // renderVec2Demo(safeCtx);
-  renderMat2Demo(safeCtx);
+  renderMat3Demo(safeCtx);
 }
