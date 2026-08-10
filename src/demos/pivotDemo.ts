@@ -98,5 +98,9 @@ export function renderPivotDemo(ctx: CanvasRenderingContext2D): void {
     { x: pivotScreenPoint.x + 10, y: pivotScreenPoint.y - 10 },
     'red'
   );
-  drawText(ctx, 'Q / E: rotate   R: reset', { x: 20, y: 30 });
+  drawText(
+    ctx,
+    'Q / E: rotate   R: reset   1: center   2: edge   3: corner   4: outside',
+    { x: 20, y: 30 }
+  );
 }
