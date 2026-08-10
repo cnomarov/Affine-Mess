@@ -1,4 +1,4 @@
-import { renderPolygonPipelineDemo } from './demos/polygonPipelineDemo';
+import { renderPivotDemo } from './demos/pivotDemo';
 import { clear } from './renderer';
 
 const canvas = document.getElementById('canvas');
@@ -30,5 +30,5 @@ requestAnimationFrame(loop);
 
 function render(): void {
   clear(safeCtx);
-  renderPolygonPipelineDemo(safeCtx);
+  renderPivotDemo(safeCtx);
 }
