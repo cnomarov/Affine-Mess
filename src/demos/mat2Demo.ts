@@ -1,8 +1,7 @@
-import { Vec2 } from '../math/Vec2';
+import { Mat2, Vec2 } from '../math';
 import { drawLine, drawText } from '../renderer';
-import { Vec2ToScreenPoint } from '../utils/Vec2ToScreenPoint';
+import { Vec2ToScreenPoint } from '../utils';
 import type { ScreenPoint } from '../types';
-import { Mat2 } from '../math/Mat2';
 
 const squareVertices: Vec2[] = [
   new Vec2(-1, -1),

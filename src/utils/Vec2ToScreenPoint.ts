@@ -1,4 +1,4 @@
-import type { Vec2 } from '../math/Vec2';
+import type { Vec2 } from '../math';
 import type { ScreenPoint } from '../types';
 
 export function Vec2ToScreenPoint(origin: ScreenPoint, a: Vec2, scale: number) {

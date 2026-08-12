@@ -1,5 +1,4 @@
-import { Vec2 } from '../math/Vec2';
-import { Mat3 } from '../math/Mat3';
+import { Mat3, Vec2 } from '../math';
 
 export class Transform2D {
   position: Vec2;

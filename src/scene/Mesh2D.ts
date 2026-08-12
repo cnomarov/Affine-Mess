@@ -1,4 +1,4 @@
-import { Vec2 } from '../math/Vec2';
+import { Vec2 } from '../math';
 import { type Edge } from '../types';
 
 export class Mesh2D {

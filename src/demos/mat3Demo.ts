@@ -1,8 +1,7 @@
-import { Mat3 } from '../math/Mat3';
-import { Vec2 } from '../math/Vec2';
+import { Mat3, Vec2 } from '../math';
 import { type ScreenPoint } from '../types';
 import { drawLine, drawPoint, drawText } from '../renderer';
-import { Vec2ToScreenPoint } from '../utils/Vec2ToScreenPoint';
+import { Vec2ToScreenPoint } from '../utils';
 
 const origin: ScreenPoint = {
   x: 300,

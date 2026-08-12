@@ -1,8 +1,8 @@
-import { Vec2 } from '../math/Vec2';
+import { Vec2 } from '../math';
 import { drawLine, drawPoint, drawText } from '../renderer';
-import { Transform2D } from '../scene/Transform2D';
+import { Mesh2D, Node2D, Transform2D } from '../scene';
 import type { ScreenPoint } from '../types';
-import { Vec2ToScreenPoint } from '../utils/Vec2ToScreenPoint';
+import { Vec2ToScreenPoint } from '../utils';
 
 const doorVertices: Vec2[] = [
   new Vec2(-1, -1),
@@ -17,6 +17,8 @@ const doorEdges: [number, number][] = [
   [2, 3],
   [3, 0],
 ];
+
+const doorMesh = new Mesh2D(doorVertices, doorEdges);
 
 const screenOrigin: ScreenPoint = {
   x: 350,
@@ -33,44 +35,52 @@ const doorTransform = new Transform2D(
   new Vec2(-1, 0)
 );
 
+const doorNode = new Node2D(doorTransform, doorMesh);
+
 window.addEventListener('keydown', (event) => {
   if (event.key.toLowerCase() === 'q') {
-    doorTransform.rotation += Math.PI / 36;
+    doorNode.transform.rotation += Math.PI / 36;
   }
 
   if (event.key.toLowerCase() === 'e') {
-    doorTransform.rotation -= Math.PI / 36;
+    doorNode.transform.rotation -= Math.PI / 36;
   }
 
   if (event.key.toLowerCase() === 'r') {
-    doorTransform.rotation = initialRotation;
-    doorTransform.pivot = new Vec2(-1, 0);
+    doorNode.transform.rotation = initialRotation;
+    doorNode.transform.pivot = new Vec2(-1, 0);
   }
 
   if (event.key === '1') {
-    doorTransform.pivot = new Vec2(0, 0);
+    doorNode.transform.pivot = new Vec2(0, 0);
   }
 
   if (event.key === '2') {
-    doorTransform.pivot = new Vec2(-1, 0);
+    doorNode.transform.pivot = new Vec2(-1, 0);
   }
 
   if (event.key === '3') {
-    doorTransform.pivot = new Vec2(-1, -1);
+    doorNode.transform.pivot = new Vec2(-1, -1);
   }
 
   if (event.key === '4') {
-    doorTransform.pivot = new Vec2(-2, 0);
+    doorNode.transform.pivot = new Vec2(-2, 0);
   }
 });
 
 export function renderPivotDemo(ctx: CanvasRenderingContext2D): void {
-  const localMatrix = doorTransform.getLocalMatrix();
-  const transformedVertices = doorVertices.map((vertex) => {
+  const localMatrix = doorNode.transform.getLocalMatrix();
+
+  const mesh = doorNode.mesh;
+
+  if (!mesh) {
+    return;
+  }
+  const transformedVertices = mesh.vertices.map((vertex) => {
     return localMatrix.transformPoint(vertex);
   });
 
-  for (const [fromIndex, toIndex] of doorEdges) {
+  for (const [fromIndex, toIndex] of mesh.edges) {
     const fromPoint = Vec2ToScreenPoint(
       screenOrigin,
       transformedVertices[fromIndex],
@@ -87,7 +97,7 @@ export function renderPivotDemo(ctx: CanvasRenderingContext2D): void {
 
   const pivotScreenPoint = Vec2ToScreenPoint(
     screenOrigin,
-    doorTransform.position,
+    doorNode.transform.position,
     pixelsPerUnit
   );
 
