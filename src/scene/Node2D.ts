@@ -35,4 +35,21 @@ export class Node2D {
 
     child.parent = this;
   }
+
+  removeChild(child: Node2D) {
+    if (!this.children.has(child))
+      throw new Error('parent does not have this child');
+
+    this.children.delete(child);
+    child.parent = null;
+  }
+
+  getWorldMatrix() {
+    const localMatrix = this.transform.getLocalMatrix();
+
+    if (!this.parent) return localMatrix;
+
+    const worldMatrix = localMatrix.multiply(this.parent.getWorldMatrix());
+    return worldMatrix;
+  }
 }
