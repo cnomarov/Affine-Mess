@@ -52,4 +52,12 @@ export class Node2D {
     const worldMatrix = localMatrix.multiply(this.parent.getWorldMatrix());
     return worldMatrix;
   }
+
+  traverse(action: (node: Node2D) => void): void {
+    action(this);
+
+    for (const child of this.children) {
+      child.traverse(action);
+    }
+  }
 }

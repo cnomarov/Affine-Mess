@@ -1,4 +1,4 @@
-import { renderPivotDemo } from './demos/pivotDemo';
+import { renderHierarchyDemo } from './demos/hierarchyDemo';
 import { clear } from './renderer';
 
 const canvas = document.getElementById('canvas');
@@ -30,5 +30,5 @@ requestAnimationFrame(loop);
 
 function render(): void {
   clear(safeCtx);
-  renderPivotDemo(safeCtx);
+  renderHierarchyDemo(safeCtx);
 }

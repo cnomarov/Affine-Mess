@@ -318,3 +318,27 @@ test('Node2D world matrix applies child transform before parent transform', () =
     childWorldMatrix.equalsApprox(new Mat3(0, 1, 0, -1, 0, 0, 3, 4, 1))
   ).toBe(true);
 });
+
+test('Node2D method traverse', () => {
+  const transform = new Transform2D(
+    new Vec2(3, 2),
+    0,
+    new Vec2(1, 1),
+    new Vec2(0, 0)
+  );
+
+  const parent = new Node2D(transform, null);
+  const child = new Node2D(transform, null);
+  const grandchild = new Node2D(transform, null);
+
+  parent.addChild(child);
+  child.addChild(grandchild);
+
+  const visited: Node2D[] = [];
+
+  parent.traverse((node) => {
+    visited.push(node);
+  });
+
+  expect(visited).toEqual([parent, child, grandchild]);
+});
