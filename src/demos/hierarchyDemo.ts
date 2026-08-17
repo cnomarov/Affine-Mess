@@ -1,8 +1,9 @@
 import { Vec2 } from '../math';
 import { Mesh2D, Node2D, Transform2D } from '../scene';
 import type { ScreenPoint } from '../types';
-import { drawLine } from '../renderer';
+import { drawLine, drawText } from '../renderer';
 import { Vec2ToScreenPoint } from '../utils';
+import { Camera2D } from '../rendering';
 
 const rectangleVertices: Vec2[] = [
   new Vec2(0, 0),
@@ -41,7 +42,7 @@ const childTransform = new Transform2D(
   new Vec2(0, 0)
 );
 
-const grandChildTransform = new Transform2D(
+const grandchildTransform = new Transform2D(
   new Vec2(2, 0),
   0,
   new Vec2(0.7, 0.7),
@@ -50,12 +51,26 @@ const grandChildTransform = new Transform2D(
 
 const parentNode = new Node2D(parentTransform, rectangleMesh);
 const childNode = new Node2D(childTransform, rectangleMesh);
-const grandChildNode = new Node2D(grandChildTransform, rectangleMesh);
+const grandchildNode = new Node2D(grandchildTransform, rectangleMesh);
+
+const cameraDetails = {
+  position: new Vec2(0, 0),
+  rotation: 0,
+  zoom: 1,
+};
+
+const camera = new Camera2D(
+  cameraDetails.position,
+  cameraDetails.rotation,
+  cameraDetails.zoom
+);
 
 parentNode.addChild(childNode);
-childNode.addChild(grandChildNode);
+childNode.addChild(grandchildNode);
 
 window.addEventListener('keydown', (event) => {
+  const step = 0.2;
+
   if (event.key.toLowerCase() === 'q')
     parentNode.transform.rotation =
       parentNode.transform.rotation + Math.PI / 36;
@@ -70,9 +85,34 @@ window.addEventListener('keydown', (event) => {
   if (event.key.toLowerCase() === 'd')
     childNode.transform.rotation = childNode.transform.rotation - Math.PI / 36;
 
+  if (event.key === 'ArrowLeft')
+    camera.position = new Vec2(camera.position.x - step, camera.position.y);
+
+  if (event.key === 'ArrowRight')
+    camera.position = new Vec2(camera.position.x + step, camera.position.y);
+
+  if (event.key === 'ArrowUp')
+    camera.position = new Vec2(camera.position.x, camera.position.y + step);
+
+  if (event.key === 'ArrowDown')
+    camera.position = new Vec2(camera.position.x, camera.position.y - step);
+
+  if (event.key.toLowerCase() === 'z')
+    camera.rotation = camera.rotation + Math.PI / 36;
+
+  if (event.key.toLowerCase() === 'x')
+    camera.rotation = camera.rotation - Math.PI / 36;
+
+  if (event.key === '+') camera.zoom = camera.zoom * 1.1;
+
+  if (event.key === '-') camera.zoom = Math.max(0.1, camera.zoom / 1.1);
+
   if (event.key.toLowerCase() === 'r') {
     parentNode.transform.rotation = 0;
     childNode.transform.rotation = 0;
+    camera.position = new Vec2(0, 0);
+    camera.rotation = 0;
+    camera.zoom = 1;
   }
 });
 
@@ -80,6 +120,7 @@ const colors = ['blue', 'green', 'purple'];
 
 export function renderHierarchyDemo(ctx: CanvasRenderingContext2D) {
   let colorIndex = 0;
+  const viewZoomMatrix = camera.getViewZoomMatrix();
   parentNode.traverse((node) => {
     const nodeWorldMatrix = node.getWorldMatrix();
     const nodeMesh = node.mesh;
@@ -97,11 +138,29 @@ export function renderHierarchyDemo(ctx: CanvasRenderingContext2D) {
       const fromVec = nodeWorldVertices[fromIndex];
       const toVec = nodeWorldVertices[toIndex];
 
-      const fromPoint = Vec2ToScreenPoint(origin, fromVec, pixelsPerUnit);
-      const toPoint = Vec2ToScreenPoint(origin, toVec, pixelsPerUnit);
+      const fromCameraPoint = viewZoomMatrix.transformPoint(fromVec);
+      const toCameraPoint = viewZoomMatrix.transformPoint(toVec);
+
+      const fromPoint = Vec2ToScreenPoint(
+        origin,
+        fromCameraPoint,
+        pixelsPerUnit
+      );
+      const toPoint = Vec2ToScreenPoint(origin, toCameraPoint, pixelsPerUnit);
 
       drawLine(ctx, fromPoint, toPoint, colors[colorIndex]);
     }
     colorIndex++;
   });
+
+  drawText(
+    ctx,
+    'Q/E: parent   A/D: child   Arrows: camera position',
+    { x: 20, y: 30 }
+  );
+  drawText(
+    ctx,
+    `Z/X: camera rotation   +/-: zoom   R: reset   Zoom: ${camera.zoom.toFixed(2)}`,
+    { x: 20, y: 55 }
+  );
 }

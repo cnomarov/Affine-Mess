@@ -80,7 +80,7 @@ test('Node2D method addChild with error', () => {
 
   const nodeParent = new Node2D(transformParent, null);
   expect(() => nodeParent.addChild(nodeParent)).toThrow(
-    'parent cannot be a child to itself'
+    'Node cannot be a child of itself'
   );
   expect(nodeParent.children).toEqual(new Set<Node2D>());
   expect(nodeParent.parent).toBe(null);
@@ -106,7 +106,7 @@ test('Node2D method addChild duplicate', () => {
 
   nodeParent.addChild(nodeChild);
   expect(() => nodeParent.addChild(nodeChild)).toThrow(
-    'child can only be added once'
+    'Child can only be added once'
   );
   expect(nodeParent.children.size).toBe(1);
   expect(nodeParent.children.has(nodeChild)).toBe(true);
@@ -134,7 +134,7 @@ test('Node2D method addChild rejects a second parent', () => {
 
   nodeParent.addChild(nodeChild);
   expect(() => nodeParent2.addChild(nodeChild)).toThrow(
-    'child already has parent'
+    'Child already has a parent'
   );
   expect(nodeParent.children.has(nodeChild)).toBe(true);
   expect(nodeParent.children.size).toBe(1);
@@ -161,7 +161,7 @@ test('Node2D method addChild rejects a cycle', () => {
   nodeC.addChild(nodeD);
 
   expect(() => nodeD.addChild(nodeA)).toThrow(
-    'children of child cannot be parent of parent'
+    'Cannot create a cycle in the scene graph'
   );
 
   expect(nodeA.parent).toBeNull();
@@ -227,7 +227,7 @@ test('Node2D method removeChild rejects a node that is not a child', () => {
 
   nodeParent2.addChild(nodeChild);
   expect(() => nodeParent.removeChild(nodeChild)).toThrow(
-    'parent does not have this child'
+    'Node is not a child of this parent'
   );
   expect(nodeParent2.children.has(nodeChild)).toBe(true);
   expect(nodeParent2.children.size).toBe(1);

@@ -17,19 +17,19 @@ export class Node2D {
   addChild(child: Node2D) {
     let ancestor: Node2D | null = this;
 
-    if (child === this) throw new Error(`parent cannot be a child to itself`);
+    if (child === this) throw new Error('Node cannot be a child of itself');
 
     if (this.children.has(child))
-      throw new Error('child can only be added once');
+      throw new Error('Child can only be added once');
 
     while (ancestor) {
       if (ancestor === child)
-        throw new Error('children of child cannot be parent of parent');
+        throw new Error('Cannot create a cycle in the scene graph');
 
       ancestor = ancestor.parent;
     }
 
-    if (child.parent) throw new Error('child already has parent');
+    if (child.parent) throw new Error('Child already has a parent');
 
     this.children.add(child);
 
@@ -38,7 +38,7 @@ export class Node2D {
 
   removeChild(child: Node2D) {
     if (!this.children.has(child))
-      throw new Error('parent does not have this child');
+      throw new Error('Node is not a child of this parent');
 
     this.children.delete(child);
     child.parent = null;
