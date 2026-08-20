@@ -1,5 +1,6 @@
 import { renderHierarchyDemo } from './demos/hierarchyDemo';
 import { clear } from './renderer';
+import type { ScreenPoint } from './types';
 
 const canvas = document.getElementById('canvas');
 
@@ -18,6 +19,32 @@ const safeCtx: CanvasRenderingContext2D = ctx;
 canvas.width = window.innerWidth;
 canvas.height = 500;
 
+let mouseScreenPoint: ScreenPoint = {
+  x: 300,
+  y: 300,
+};
+
+let isMousePressed = false;
+
+canvas.addEventListener('mousemove', (event) => {
+  mouseScreenPoint = {
+    x: event.offsetX,
+    y: event.offsetY,
+  };
+});
+
+canvas.addEventListener('mousedown', () => {
+  isMousePressed = true;
+});
+
+canvas.addEventListener('mouseup', () => {
+  isMousePressed = false;
+});
+
+canvas.addEventListener('mouseleave', () => {
+  isMousePressed = false;
+});
+
 function update(): void {}
 
 function loop(): void {
@@ -30,5 +57,5 @@ requestAnimationFrame(loop);
 
 function render(): void {
   clear(safeCtx);
-  renderHierarchyDemo(safeCtx);
+  renderHierarchyDemo(safeCtx, mouseScreenPoint, isMousePressed);
 }

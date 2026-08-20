@@ -97,3 +97,20 @@ test('Camera2D method getViewZoomMatrix', () => {
     viewZoomMatrix.transformPoint(worldPoint).equalsApprox(new Vec2(2, 2))
   ).toBe(true);
 });
+
+test('Camera2D inverse view zoom matrix restores the world point', () => {
+  const position = new Vec2(3, 2);
+  const rotation = Math.PI / 2;
+  const zoom = 2;
+
+  const worldPoint = new Vec2(4, 3);
+
+  const camera = new Camera2D(position, rotation, zoom);
+  const viewZoomMatrix = camera.getViewZoomMatrix();
+  const cameraPoint = viewZoomMatrix.transformPoint(worldPoint);
+  const inverseViewZoomMatrix = viewZoomMatrix.inverse();
+
+  expect(
+    inverseViewZoomMatrix.transformPoint(cameraPoint).equalsApprox(worldPoint)
+  ).toBe(true);
+});

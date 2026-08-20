@@ -2,7 +2,7 @@ import { Vec2 } from '../math';
 import { Mesh2D, Node2D, Transform2D } from '../scene';
 import type { ScreenPoint } from '../types';
 import { drawLine, drawText } from '../renderer';
-import { Vec2ToScreenPoint } from '../utils';
+import { Vec2ToScreenPoint, ScreenPointToVec2 } from '../utils';
 import { Camera2D } from '../rendering';
 
 const rectangleVertices: Vec2[] = [
@@ -118,9 +118,40 @@ window.addEventListener('keydown', (event) => {
 
 const colors = ['blue', 'green', 'purple'];
 
-export function renderHierarchyDemo(ctx: CanvasRenderingContext2D) {
+let isChildSelected = false;
+let wasMousePressed = false;
+
+export function renderHierarchyDemo(
+  ctx: CanvasRenderingContext2D,
+  mouseScreenPoint: ScreenPoint,
+  isMousePressed: boolean
+) {
+  const mouseCameraZoomPoint = ScreenPointToVec2(
+    origin,
+    mouseScreenPoint,
+    pixelsPerUnit
+  );
+
   let colorIndex = 0;
   const viewZoomMatrix = camera.getViewZoomMatrix();
+  const inverseViewZoomMatrix = viewZoomMatrix.inverse();
+  const mouseWorldPoint =
+    inverseViewZoomMatrix.transformPoint(mouseCameraZoomPoint);
+
+  const inverseChildWorldMatrix = childNode.getWorldMatrix().inverse();
+  const mouseChildLocalPoint =
+    inverseChildWorldMatrix.transformPoint(mouseWorldPoint);
+
+  const isChildHovered =
+    mouseChildLocalPoint.x >= 0 &&
+    mouseChildLocalPoint.x <= 2 &&
+    mouseChildLocalPoint.y >= 0 &&
+    mouseChildLocalPoint.y <= 1;
+
+  const mouseJustPressed = isMousePressed && !wasMousePressed;
+  if (mouseJustPressed) isChildSelected = isChildHovered;
+  wasMousePressed = isMousePressed;
+
   parentNode.traverse((node) => {
     const nodeWorldMatrix = node.getWorldMatrix();
     const nodeMesh = node.mesh;
@@ -130,6 +161,13 @@ export function renderHierarchyDemo(ctx: CanvasRenderingContext2D) {
     const nodeWorldVertices = nodeMesh.vertices.map((vertex) => {
       return nodeWorldMatrix.transformPoint(vertex);
     });
+
+    const nodeColor =
+      node === childNode && isChildSelected
+        ? 'red'
+        : node === childNode && isChildHovered
+          ? 'orange'
+          : colors[colorIndex];
 
     for (const edge of nodeMesh.edges) {
       const fromIndex = edge[0];
@@ -148,19 +186,42 @@ export function renderHierarchyDemo(ctx: CanvasRenderingContext2D) {
       );
       const toPoint = Vec2ToScreenPoint(origin, toCameraPoint, pixelsPerUnit);
 
-      drawLine(ctx, fromPoint, toPoint, colors[colorIndex]);
+      drawLine(ctx, fromPoint, toPoint, nodeColor);
     }
     colorIndex++;
   });
 
-  drawText(
-    ctx,
-    'Q/E: parent   A/D: child   Arrows: camera position',
-    { x: 20, y: 30 }
-  );
+  drawText(ctx, 'Q/E: parent   A/D: child   Arrows: camera position', {
+    x: 20,
+    y: 30,
+  });
   drawText(
     ctx,
     `Z/X: camera rotation   +/-: zoom   R: reset   Zoom: ${camera.zoom.toFixed(2)}`,
     { x: 20, y: 55 }
   );
+  drawText(
+    ctx,
+    `mouseWorldPoint: (${mouseWorldPoint.x.toFixed(2)}, ${mouseWorldPoint.y.toFixed(2)})`,
+    {
+      x: 20,
+      y: 100,
+    }
+  );
+  drawText(
+    ctx,
+    `local child point: (${mouseChildLocalPoint.x.toFixed(2)}, ${mouseChildLocalPoint.y.toFixed(2)})`,
+    {
+      x: 20,
+      y: 120,
+    }
+  );
+  drawText(ctx, `isChildHovered: ${isChildHovered}`, {
+    x: 20,
+    y: 140,
+  });
+  drawText(ctx, `isChildSelected: ${isChildSelected}`, {
+    x: 20,
+    y: 160,
+  });
 }
